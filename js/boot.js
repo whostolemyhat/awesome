@@ -6,7 +6,7 @@ var app = app || {};
 
 app.bootState = {
     preload: function() {
-        game.load.image('progressBar', '/img/menu/progress.png');
+        game.load.image('progressBar', 'img/menu/progress.png');
     },
 
     create: function() {
