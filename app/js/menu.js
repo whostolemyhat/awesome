@@ -7,13 +7,18 @@ var app = app || {};
 
 app.menuState = {
     create: function() {
-        var nameLabel = game.add.text(game.world.centerX, -50, 'Awesome Jumpy\n Cave Man', { font: '40px Arial', fill: '#fff' });
+        var nameLabel = game.add.text(
+                                      game.world.centerX,
+                                      -50,
+                                      'Awesome Jumpy\n Cave Man',
+                                      { font: '40px Arial', fill: '#fff', align: 'center' }
+                                    );
         nameLabel.anchor.setTo(0.5, 0.5);
-        game.add.tween(nameLabel).to({ y: game.world.centerY }, 1000).easing(Phaser.Easing.Bounce.Out).start();
+        game.add.tween(nameLabel).to({ y: game.world.centerY - 20 }, 1000).easing(Phaser.Easing.Bounce.Out).start();
 
         var startLabel = game.add.text(
                                        game.world.centerX,
-                                       game.world.centerY + 20,
+                                       game.world.centerY + 40,
                                        'press up to start',
                                        { font: '20px Arial', fill: '#fff' }
                                     );
