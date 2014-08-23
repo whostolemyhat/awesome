@@ -21,11 +21,11 @@ app.loadState = {
         game.load.setPreloadSprite(progressBar);
 
         // load all assets
-        game.load.spritesheet('player', '/img/player/player2.png', 20, 20);
-        game.load.spritesheet('mute', '/img/menu/muteButton.png', 28, 22);
+        game.load.spritesheet('player', '../img/player/player2.png', 20, 20);
+        game.load.spritesheet('mute', '../img/menu/muteButton.png', 28, 22);
 
-        game.load.image('wallV', '/img/world/wallVertical.png');
-        game.load.image('wallH', '/img/world/wallHorizontal.png');
+        game.load.image('wallV', '../img/world/wallVertical.png');
+        game.load.image('wallH', '../img/world/wallHorizontal.png');
     },
 
     create: function() {
