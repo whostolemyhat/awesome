@@ -4,10 +4,11 @@ var app = app || {};
 
 app.playState = {
     create: function() {
-        this.GRAVITY = 2600;
+        this.GRAVITY = 2100;
         this.JUMP_SPEED = -700;
-        this.canDoubleJump = true;
+        this.canDoubleJump = false;
         this.canVariableJump = true;
+        this.maxJumpTime = 50;
 
         this.cursor = this.game.input.keyboard.createCursorKeys();
         game.input.keyboard.addKeyCapture([
@@ -21,9 +22,7 @@ app.playState = {
         this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
         this.player.anchor.setTo(0.5, 0.5);
         game.physics.arcade.enable(this.player);
-        // this.player.body.gravity.y = 500;
         this.player.body.gravity.y = this.GRAVITY;
-        // game.physics.arcade.gravity.y = this.GRAVITY;
         this.player.animations.add('right', [1, 2], 8, true);
         this.player.animations.add('left', [3, 4], 8, true);
         this.emitter = game.add.emitter(0, 0, 15);
@@ -39,6 +38,7 @@ app.playState = {
         this.enemies = game.add.group();
         this.enemies.enableBody = true;
         this.enemies.createMultiple(10, 'enemy');
+        this.nextEnemy = 1000;
     },
 
     update: function() {
@@ -53,7 +53,6 @@ app.playState = {
         game.physics.arcade.collide(this.enemies, this.walls);
         game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
 
-        // add enemies
         // add enemies
         var start = 4000;
         var end = 1000;
@@ -72,27 +71,40 @@ app.playState = {
         this.walls.enableBody = true;
 
         game.add.sprite(0, 0, 'wallV', 0, this.walls);
-        game.add.sprite(480, 0, 'wallV', 0, this.walls);
+        game.add.sprite(0, 300, 'wallV', 0, this.walls);
+        game.add.sprite(game.world.width - 20, 0, 'wallV', 0, this.walls);
+        game.add.sprite(game.world.width - 20, 300, 'wallV', 0, this.walls);
 
-        game.add.sprite(0, 0, 'wallH', 0, this.walls); // top left
-        game.add.sprite(300, 0, 'wallH', 0, this.walls); // top right
-        game.add.sprite(0, 320, 'wallH', 0, this.walls); // bottom left
-        game.add.sprite(300, 320, 'wallH', 0, this.walls); // bottom right
+        game.add.sprite(0, 0, 'wallH', 0, this.walls).scale.setTo(1.4, 1); // top left
+        game.add.sprite(480, 0, 'wallH', 0, this.walls).scale.setTo(1.5, 1); // top right
+        game.add.sprite(0, game.world.height - 20, 'wallH', 0, this.walls).scale.setTo(2, 1); // bottom left
+        game.add.sprite(500, game.world.height - 20, 'wallH', 0, this.walls).scale.setTo(1.5, 1); // bottom right
 
-        game.add.sprite(-100, 160, 'wallH', 0, this.walls); // bottom right
-        game.add.sprite(400, 160, 'wallH', 0, this.walls); // bottom right
+        // left
+        game.add.sprite(-15, 80, 'wallH', 0, this.walls);
+        game.add.sprite(-15, 200, 'wallH', 0, this.walls);
+        game.add.sprite(-15, 340, 'wallH', 0, this.walls);
+        game.add.sprite(-15, 480, 'wallH', 0, this.walls);
 
-        game.add.sprite(100, 80, 'wallH', 0, this.walls).scale.setTo(1.5, 1);
-        game.add.sprite(100, 240, 'wallH', 0, this.walls).scale.setTo(1.5, 1);
+        // right
+        game.add.sprite(600, 80, 'wallH', 0, this.walls);
+        game.add.sprite(600, 200, 'wallH', 0, this.walls);
+        game.add.sprite(600, 340, 'wallH', 0, this.walls);
+        game.add.sprite(600, 480, 'wallH', 0, this.walls);
+
+        // middle
+        // game.add.sprite(250, 60, 'wallH', 0, this.walls).scale.setTo(1.5, 1);
+        game.add.sprite(250, 140, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
+        game.add.sprite(250, 280, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
+        game.add.sprite(250, 400, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
+        game.add.sprite(250, 520, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
+
 
         this.walls.setAll('body.immovable', true);
     },
 
     movePlayer: function() {
         var onGround = this.player.body.touching.down;
-        if(onGround) {
-            this.canDoubleJump = true;
-        }
 
         if(this.cursor.left.isDown) {
             this.player.body.velocity.x = -200;
@@ -106,38 +118,9 @@ app.playState = {
             this.player.frame = 0;
         }
 
-        if(this.upInput(5)) {
-            if(this.canDoubleJump) {
-                this.canVariableJump = true;
-            }
-
-            if(this.canDoubleJump || onGround) {
-                // jump when player on ground or can double jump
-                this.player.body.velocity.y = this.JUMP_SPEED;
-
-                if(!onGround) {
-                    this.canDoubleJump = false;
-                }
-            }
-        }
-
-        // keep y velocity constant for up to 150ms
-        if(this.canVariableJump && this.upInput(150)) {
+        if(this.cursor.up.isDown && onGround) {
             this.player.body.velocity.y = this.JUMP_SPEED;
         }
-
-        if(!this.upInput()) {
-            this.canVariableJump = false;
-        }
-    },
-
-    // check whether up input has been held down
-    upInput: function(duration) {
-        var active = false;
-
-        active = this.input.keyboard.justPressed(Phaser.Keyboard.UP, duration);
-
-        return active;
     },
 
     playerDie: function() {

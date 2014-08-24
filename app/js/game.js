@@ -2,7 +2,7 @@
 
 var app = app || {};
 
-var game = new Phaser.Game(500, 340, Phaser.AUTO, 'game');
+var game = new Phaser.Game(800, 640, Phaser.AUTO, 'game');
 
 game.global = {
     score: 0
