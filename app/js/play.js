@@ -1,4 +1,4 @@
-/* global game */
+/* global game, Phaser */
 
 var app = app || {};
 
@@ -10,12 +10,23 @@ app.playState = {
         this.player.anchor.setTo(0.5, 0.5);
         game.physics.arcade.enable(this.player);
         this.player.body.gravity.y = 500;
+         this.player.animations.add('right', [1, 2], 8, true);
+        this.player.animations.add('left', [3, 4], 8, true);
 
         this.createWorld();
+
+        game.input.keyboard.addKeyCapture([
+                                          Phaser.Keyboard.UP,
+                                          Phaser.Keyboard.DOWN,
+                                          Phaser.Keyboard.LEFT,
+                                          Phaser.Keyboard.RIGHT
+                                          ]);
     },
 
     update: function() {
         game.physics.arcade.collide(this.player, this.walls);
+
+        this.movePlayer();
     },
 
     createWorld: function() {
@@ -37,5 +48,23 @@ app.playState = {
         game.add.sprite(100, 240, 'wallH', 0, this.walls).scale.setTo(1.5, 1);
 
         this.walls.setAll('body.immovable', true);
+    },
+
+    movePlayer: function() {
+        if(this.cursor.left.isDown) {
+            this.player.body.velocity.x = -200;
+            this.player.animations.play('left');
+        } else if(this.cursor.right.isDown) {
+            this.player.body.velocity.x = 200;
+            this.player.animations.play('right');
+        } else {
+            this.player.body.velocity.x = 0;
+            this.player.animations.stop();
+            this.player.frame = 0;
+        }
+
+        if(this.cursor.up.isDown && this.player.body.touching.down) {
+            this.player.body.velocity.y = -320;
+        }
     }
 };
