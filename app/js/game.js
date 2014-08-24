@@ -4,6 +4,10 @@ var app = app || {};
 
 var game = new Phaser.Game(500, 340, Phaser.AUTO, 'game');
 
+game.global = {
+    score: 0
+};
+
 // add all the states here
 // all states should be in the app namespace
 game.state.add('boot', app.bootState);
