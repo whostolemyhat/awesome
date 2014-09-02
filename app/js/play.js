@@ -1,11 +1,15 @@
 /* global game, Phaser */
 
 var app = app || {};
+var jumping = false;
+var jumpTime = 0;
+var maxJumpTime = 150;
+var jumpStart = 0;
 
 app.playState = {
     create: function() {
         this.GRAVITY = 2100;
-        this.JUMP_SPEED = -700;
+        this.JUMP_SPEED = -500;
         this.canDoubleJump = false;
         this.canVariableJump = true;
         this.maxJumpTime = 50;
@@ -93,10 +97,9 @@ app.playState = {
         game.add.sprite(600, 480, 'wallH', 0, this.walls);
 
         // middle
-        // game.add.sprite(250, 60, 'wallH', 0, this.walls).scale.setTo(1.5, 1);
         game.add.sprite(250, 140, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
         game.add.sprite(250, 280, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
-        game.add.sprite(250, 400, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
+        // game.add.sprite(250, 400, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
         game.add.sprite(250, 520, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
 
 
@@ -118,9 +121,44 @@ app.playState = {
             this.player.frame = 0;
         }
 
-        if(this.cursor.up.isDown && onGround) {
+        // jump
+        if(onGround && !jumping && this.cursor.up.isDown) {
+            console.log('jumping from ground');
+
+            jumpTime = 0;
+            onGround = false;
+            jumping = true;
+            jumpStart = game.time.now;
+
             this.player.body.velocity.y = this.JUMP_SPEED;
+
+        } else if(!onGround && this.cursor.up.isDown && jumpTime < maxJumpTime && jumping) {
+            console.log('carry on jumping');
+
+            jumpTime = game.time.elapsedSince(jumpStart);
+            console.log(jumpTime, maxJumpTime, jumpTime < maxJumpTime);
+
+            this.player.body.velocity.y = this.JUMP_SPEED;
+
+        } else if(!onGround && (!this.cursor.up.isDown || jumpTime >= maxJumpTime)) {
+            // falling
+            // jumpTime = 0;
+            console.log('falling');
+            jumping = false;
+
         }
+        if(!this.cursor.up.isDown && onGround) {
+            jumping = false;
+            jumpTime = 0;
+            console.log('finished');
+        }
+
+
+        // if(this.cursor.up.isDown && onGround) {
+        //     this.player.body.velocity.y = this.JUMP_SPEED;
+        // } else if(this.cursor.up.isDown && game.input.keyboard.justPressed(this.cursor.up, 200)) {
+        //     this.player.body.velocity.y = this.JUMP_SPEED;
+        // }
     },
 
     playerDie: function() {
