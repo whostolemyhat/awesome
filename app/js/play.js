@@ -1,18 +1,19 @@
 /* global game, Phaser */
 
 var app = app || {};
-var jumping = false;
-var jumpTime = 0;
-var maxJumpTime = 150;
-var jumpStart = 0;
+
 
 app.playState = {
     create: function() {
         this.GRAVITY = 2100;
+
+        // jumping
         this.JUMP_SPEED = -500;
-        this.canDoubleJump = false;
-        this.canVariableJump = true;
-        this.maxJumpTime = 50;
+        this.maxJumpTime = 150;
+        // currently jumping flag
+        this.jumping = false;
+        this.jumpTime = 0;
+        this.jumpStart = 0;
 
         this.cursor = this.game.input.keyboard.createCursorKeys();
         game.input.keyboard.addKeyCapture([
@@ -122,35 +123,29 @@ app.playState = {
         }
 
         // jump
-        if(onGround && !jumping && this.cursor.up.isDown) {
-            console.log('jumping from ground');
-
-            jumpTime = 0;
+        if(onGround && !this.jumping && this.cursor.up.isDown) {
+            // jumping from ground
+            this.jumpTime = 0;
             onGround = false;
-            jumping = true;
-            jumpStart = game.time.now;
+            this.jumping = true;
+            this.jumpStart = game.time.now;
 
             this.player.body.velocity.y = this.JUMP_SPEED;
 
-        } else if(!onGround && this.cursor.up.isDown && jumpTime < maxJumpTime && jumping) {
-            console.log('carry on jumping');
-
-            jumpTime = game.time.elapsedSince(jumpStart);
-            console.log(jumpTime, maxJumpTime, jumpTime < maxJumpTime);
+        } else if(!onGround && this.cursor.up.isDown && this.jumpTime < this.maxJumpTime && this.jumping) {
+            // carry on jumping
+            this.jumpTime = game.time.elapsedSince(this.jumpStart);
 
             this.player.body.velocity.y = this.JUMP_SPEED;
 
-        } else if(!onGround && (!this.cursor.up.isDown || jumpTime >= maxJumpTime)) {
+        } else if(!onGround && (!this.cursor.up.isDown || this.jumpTime >= this.maxJumpTime)) {
             // falling
-            // jumpTime = 0;
-            console.log('falling');
-            jumping = false;
+            this.jumping = false;
 
         }
         if(!this.cursor.up.isDown && onGround) {
-            jumping = false;
-            jumpTime = 0;
-            console.log('finished');
+            this.jumping = false;
+            this.jumpTime = 0;
         }
 
 
