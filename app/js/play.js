@@ -47,7 +47,7 @@ app.playState = {
     },
 
     update: function() {
-        game.physics.arcade.collide(this.player, this.walls);
+        game.physics.arcade.collide(this.player, this.layer);
 
         this.movePlayer();
 
@@ -55,7 +55,7 @@ app.playState = {
             this.playerDie();
         }
 
-        game.physics.arcade.collide(this.enemies, this.walls);
+        game.physics.arcade.collide(this.enemies, this.layer);
         game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
 
         // add enemies
@@ -72,43 +72,17 @@ app.playState = {
     },
 
     createWorld: function() {
-        this.walls = game.add.group();
-        this.walls.enableBody = true;
+        this.map = game.add.tilemap('map');
+        this.map.addTilesetImage('tileset');
 
-        game.add.sprite(0, 0, 'wallV', 0, this.walls);
-        game.add.sprite(0, 300, 'wallV', 0, this.walls);
-        game.add.sprite(game.world.width - 20, 0, 'wallV', 0, this.walls);
-        game.add.sprite(game.world.width - 20, 300, 'wallV', 0, this.walls);
+        this.layer = this.map.createLayer('Tile Layer 1');
+        this.layer.resizeWorld();
 
-        game.add.sprite(0, 0, 'wallH', 0, this.walls).scale.setTo(1.4, 1); // top left
-        game.add.sprite(480, 0, 'wallH', 0, this.walls).scale.setTo(1.5, 1); // top right
-        game.add.sprite(0, game.world.height - 20, 'wallH', 0, this.walls).scale.setTo(2, 1); // bottom left
-        game.add.sprite(500, game.world.height - 20, 'wallH', 0, this.walls).scale.setTo(1.5, 1); // bottom right
-
-        // left
-        game.add.sprite(-15, 80, 'wallH', 0, this.walls);
-        game.add.sprite(-15, 200, 'wallH', 0, this.walls);
-        game.add.sprite(-15, 340, 'wallH', 0, this.walls);
-        game.add.sprite(-15, 480, 'wallH', 0, this.walls);
-
-        // right
-        game.add.sprite(600, 80, 'wallH', 0, this.walls);
-        game.add.sprite(600, 200, 'wallH', 0, this.walls);
-        game.add.sprite(600, 340, 'wallH', 0, this.walls);
-        game.add.sprite(600, 480, 'wallH', 0, this.walls);
-
-        // middle
-        game.add.sprite(250, 140, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
-        game.add.sprite(250, 280, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
-        // game.add.sprite(250, 400, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
-        game.add.sprite(250, 520, 'wallH', 0, this.walls).scale.setTo(1.4, 1);
-
-
-        this.walls.setAll('body.immovable', true);
+        this.map.setCollision(1);
     },
 
     movePlayer: function() {
-        var onGround = this.player.body.touching.down;
+        var onGround = this.player.body.onFloor();
 
         if(this.cursor.left.isDown) {
             this.player.body.velocity.x = -200;

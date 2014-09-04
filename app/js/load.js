@@ -1,4 +1,4 @@
-/* global game */
+/* global game, Phaser */
 
 /**
 * load all the assets
@@ -30,9 +30,10 @@ app.loadState = {
         game.load.image('pixel', 'img/player/pixel.png');
 
         game.load.image('enemy', 'img/enemy/enemy.png');
-        
-        game.load.image('wallV', '/img/world/wallVertical.png');
-        game.load.image('wallH', '/img/world/wallHorizontal.png');
+
+        //tilemap
+        game.load.image('tileset', 'img/world/tileset.png');
+        game.load.tilemap('map', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
     },
 
     create: function() {
