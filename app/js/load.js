@@ -30,7 +30,11 @@ app.loadState = {
         game.load.spritesheet('player', 'img/player/caveman.png', 16, 31);
         game.load.image('pixel', 'img/player/pixel.png');
 
+        // enemies
         game.load.image('enemy', 'img/enemy/enemy.png');
+
+        // collectables
+        game.load.image('coin', 'img/collectables/coin.png');
 
         //tilemap
         game.load.image('tileset', 'img/world/tileset.png');

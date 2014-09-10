@@ -10,7 +10,7 @@ app.playState = {
         // jumping
         this.JUMP_SPEED = -500;
         this.maxJumpTime = 150;
-        this.onGround = true;
+        this.onGround = false;
         // currently jumping flag
         this.jumping = false;
         this.jumpTime = 0;
@@ -31,6 +31,7 @@ app.playState = {
         this.player.body.gravity.y = this.GRAVITY;
         this.player.animations.add('right', [1, 2], 8, true);
         this.player.animations.add('left', [3, 4], 8, true);
+        this.player.scale.setTo(2, 1);
 
         this.emitter = game.add.emitter(0, 0, 15);
         this.emitter.makeParticles('pixel');
@@ -46,6 +47,15 @@ app.playState = {
         this.enemies.enableBody = true;
         this.enemies.createMultiple(10, 'enemy');
         this.nextEnemy = 1000;
+
+        // coin
+        this.coin = game.add.sprite(60, 140, 'coin');
+        game.physics.arcade.enable(this.coin);
+        this.coin.anchor.setTo(0.5, 0.5);
+
+        // score
+        this.scoreLabel = game.add.text(30, 30, 'score: 0', { font: '18px Arial', fill: '#fff' });
+        this.score = 0;
     },
 
     update: function() {
@@ -59,6 +69,8 @@ app.playState = {
 
         game.physics.arcade.collide(this.enemies, this.layer);
         game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
+
+        game.physics.arcade.collide(this.player, this.coin, this.takeCoin, null, this);
 
         // add enemies
         var start = 4000;
@@ -168,5 +180,34 @@ app.playState = {
         enemy.body.bounce.x = 1;
         enemy.checkWorldBounds = true;
         enemy.outOfBoundsKill = true;
+    },
+
+    takeCoin: function() {
+        // this.coin.kill();
+
+        this.score += 5;
+        this.scoreLabel.text = 'score: ' + this.score;
+
+        this.updateCoinPosition();
+    },
+
+    updateCoinPosition: function() {
+        // Store all the possible coin positions in an array 
+        var coinPosition = [
+            {x: 140, y: 60}, {x: 360, y: 60}, // Top row 
+            {x: 60, y: 140}, {x: 440, y: 140}, // Middle row 
+            {x: 130, y: 300}, {x: 370, y: 300} // Bottom row
+        ];
+        // Remove the current coin position from the array
+        // Otherwise the coin could appear at the same spot twice in a row 
+        for (var i = 0; i < coinPosition.length; i++) {
+            if(coinPosition[i].x === this.coin.x) {
+                coinPosition.splice(i, 1);
+            }
+        }
+        // Randomly select a position from the array
+        var newPosition = coinPosition[ game.rnd.integerInRange(0, coinPosition.length-1)];
+        // Set the new position of the coin
+        this.coin.reset(newPosition.x, newPosition.y);
     }
 };
