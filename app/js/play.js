@@ -44,6 +44,11 @@ app.playState = {
         this.enemies.enableBody = true;
         this.enemies.createMultiple(10, 'enemy');
         this.nextEnemy = 1000;
+
+        // coin
+        this.coin = game.add.sprite(60, 140, 'coin');
+        game.physics.arcade.enable(this.coin);
+        this.coin.setAnchor(0.5, 0.5);
     },
 
     update: function() {
@@ -122,12 +127,6 @@ app.playState = {
             this.jumpTime = 0;
         }
 
-
-        // if(this.cursor.up.isDown && onGround) {
-        //     this.player.body.velocity.y = this.JUMP_SPEED;
-        // } else if(this.cursor.up.isDown && game.input.keyboard.justPressed(this.cursor.up, 200)) {
-        //     this.player.body.velocity.y = this.JUMP_SPEED;
-        // }
     },
 
     playerDie: function() {
@@ -163,5 +162,9 @@ app.playState = {
         enemy.body.bounce.x = 1;
         enemy.checkWorldBounds = true;
         enemy.outOfBoundsKill = true;
+    },
+
+    addCoin: function() {
+
     }
 };

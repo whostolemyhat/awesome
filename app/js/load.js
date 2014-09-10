@@ -29,7 +29,11 @@ app.loadState = {
         game.load.spritesheet('player', '/img/player/player2.png', 20, 20);
         game.load.image('pixel', 'img/player/pixel.png');
 
+        // enemies
         game.load.image('enemy', 'img/enemy/enemy.png');
+
+        // collectables
+        game.load.image('coin', 'img/collectbles/coin.png');
 
         //tilemap
         game.load.image('tileset', 'img/world/tileset.png');
