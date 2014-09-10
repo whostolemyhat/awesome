@@ -26,7 +26,8 @@ app.loadState = {
         // load all assets
         game.load.spritesheet('mute', '/img/menu/muteButton.png', 28, 22);
 
-        game.load.spritesheet('player', '/img/player/player2.png', 20, 20);
+        // game.load.spritesheet('player', '/img/player/player2.png', 20, 20);
+        game.load.spritesheet('player', '/img/player/caveman.png', 16, 31);
         game.load.image('pixel', 'img/player/pixel.png');
 
         // enemies

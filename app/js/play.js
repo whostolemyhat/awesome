@@ -10,6 +10,7 @@ app.playState = {
         // jumping
         this.JUMP_SPEED = -500;
         this.maxJumpTime = 150;
+        this.onGround;
         // currently jumping flag
         this.jumping = false;
         this.jumpTime = 0;
@@ -30,6 +31,7 @@ app.playState = {
         this.player.body.gravity.y = this.GRAVITY;
         this.player.animations.add('right', [1, 2], 8, true);
         this.player.animations.add('left', [3, 4], 8, true);
+
         this.emitter = game.add.emitter(0, 0, 15);
         this.emitter.makeParticles('pixel');
         this.emitter.setYSpeed(-150, 150);
@@ -53,7 +55,7 @@ app.playState = {
 
     update: function() {
         game.physics.arcade.collide(this.player, this.layer);
-
+        this.onGround = this.player.body.onFloor();
         this.movePlayer();
 
         if(!this.player.inWorld) {
@@ -87,7 +89,6 @@ app.playState = {
     },
 
     movePlayer: function() {
-        var onGround = this.player.body.onFloor();
 
         if(this.cursor.left.isDown) {
             this.player.body.velocity.x = -200;
@@ -98,35 +99,45 @@ app.playState = {
         } else {
             this.player.body.velocity.x = 0;
             this.player.animations.stop();
-            this.player.frame = 0;
+            this.player.frame = 4;
         }
 
         // jump
-        if(onGround && !this.jumping && this.cursor.up.isDown) {
+        if(this.onGround && !this.jumping && this.cursor.up.isDown) {
             // jumping from ground
             this.jumpTime = 0;
-            onGround = false;
+            this.onGround = false;
             this.jumping = true;
             this.jumpStart = game.time.now;
 
             this.player.body.velocity.y = this.JUMP_SPEED;
 
-        } else if(!onGround && this.cursor.up.isDown && this.jumpTime < this.maxJumpTime && this.jumping) {
+        } else if(!this.onGround && this.cursor.up.isDown && this.jumpTime < this.maxJumpTime && this.jumping) {
             // carry on jumping
             this.jumpTime = game.time.elapsedSince(this.jumpStart);
 
             this.player.body.velocity.y = this.JUMP_SPEED;
 
-        } else if(!onGround && (!this.cursor.up.isDown || this.jumpTime >= this.maxJumpTime)) {
+        } else if(!this.onGround && (!this.cursor.up.isDown || this.jumpTime >= this.maxJumpTime)) {
             // falling
             this.jumping = false;
 
         }
-        if(!this.cursor.up.isDown && onGround) {
+        if(!this.cursor.up.isDown && this.onGround) {
             this.jumping = false;
             this.jumpTime = 0;
         }
 
+        if(!this.onGround) {
+            this.player.frame = 6;
+        }
+
+
+        // if(this.cursor.up.isDown && onGround) {
+        //     this.player.body.velocity.y = this.JUMP_SPEED;
+        // } else if(this.cursor.up.isDown && game.input.keyboard.justPressed(this.cursor.up, 200)) {
+        //     this.player.body.velocity.y = this.JUMP_SPEED;
+        // }
     },
 
     playerDie: function() {
