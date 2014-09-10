@@ -10,7 +10,7 @@ app.playState = {
         // jumping
         this.JUMP_SPEED = -500;
         this.maxJumpTime = 150;
-        this.onGround;
+        this.onGround = true;
         // currently jumping flag
         this.jumping = false;
         this.jumpTime = 0;
