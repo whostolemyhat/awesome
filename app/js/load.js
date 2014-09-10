@@ -34,7 +34,7 @@ app.loadState = {
         game.load.image('enemy', 'img/enemy/enemy.png');
 
         // collectables
-        game.load.image('coin', 'img/collectbles/coin.png');
+        game.load.image('coin', 'img/collectables/coin.png');
 
         //tilemap
         game.load.image('tileset', 'img/world/tileset.png');
