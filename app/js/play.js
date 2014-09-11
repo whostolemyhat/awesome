@@ -188,6 +188,8 @@ app.playState = {
         this.score += 5;
         this.scoreLabel.text = 'score: ' + this.score;
 
+        game.add.tween(this.player.scale).to({ x : 2, y: 1.3 }).to({ x: 1.7, y: 1 }).start();
+
         this.updateCoinPosition();
     },
 
