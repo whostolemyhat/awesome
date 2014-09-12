@@ -26,12 +26,13 @@ app.playState = {
 
         // player
         this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
-        this.player.anchor.setTo(0.5, 0.5);
+        this.player.anchor.setTo(0.5, 1);
         game.physics.arcade.enable(this.player);
         this.player.body.gravity.y = this.GRAVITY;
-        this.player.animations.add('right', [1, 2], 8, true);
-        this.player.animations.add('left', [3, 4], 8, true);
-        this.player.scale.setTo(2, 1);
+        this.player.animations.add('right', [0, 1], 8, true);
+        this.player.animations.add('left', [2, 3], 8, true);
+        this.playerScale = 1.7;
+        this.player.scale.setTo(this.playerScale, 1);
 
         this.emitter = game.add.emitter(0, 0, 15);
         this.emitter.makeParticles('pixel');
@@ -98,16 +99,23 @@ app.playState = {
     movePlayer: function() {
 
         if(this.cursor.left.isDown) {
+
             this.player.body.velocity.x = -200;
             this.player.animations.play('left');
+            this.player.scale.x = this.playerScale;
+
         } else if(this.cursor.right.isDown) {
+
+            this.player.scale.x = -this.playerScale;
             this.player.body.velocity.x = 200;
             this.player.animations.play('right');
+
         } else {
             this.player.body.velocity.x = 0;
             this.player.animations.stop();
-            this.player.frame = 4;
+            this.player.frmae = 4;
         }
+        
 
         // jump
         if(this.onGround && !this.jumping && this.cursor.up.isDown) {
@@ -137,6 +145,11 @@ app.playState = {
 
         if(!this.onGround) {
             this.player.frame = 6;
+            if(this.cursor.right.isDown) {
+                this.player.scale.x = -this.playerScale;
+            } else {
+                this.player.scale.x = this.playerScale;
+            }
         }
 
 
