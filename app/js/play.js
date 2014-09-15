@@ -92,6 +92,8 @@ app.playState = {
         this.layer = this.map.createLayer('Tile Layer 1');
         this.layer.resizeWorld();
 
+        this.coinLayer = this.map.createLayer('coins');
+
         this.map.setCollision(1);
     },
 
