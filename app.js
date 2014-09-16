@@ -5,10 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
+var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
+
+
+console.log('connecting local');
+mongoose.connect('mongodb://localhost/awesome');
 
 var app = express();
 
