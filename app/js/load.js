@@ -38,7 +38,8 @@ app.loadState = {
 
         //tilemap
         game.load.image('tileset', 'img/world/tileset.png');
-        game.load.tilemap('map', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
+        // game.load.tilemap('map', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('map', 'assets/level2.json', null, Phaser.Tilemap.TILED_JSON);
     },
 
     create: function() {

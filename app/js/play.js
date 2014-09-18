@@ -34,6 +34,9 @@ app.playState = {
         this.playerScale = 1.7;
         this.player.scale.setTo(this.playerScale, 1);
 
+        game.world.setBounds(0, 0, 2000, 1400);
+        game.camera.follow(this.player);
+
         this.emitter = game.add.emitter(0, 0, 15);
         this.emitter.makeParticles('pixel');
         this.emitter.setYSpeed(-150, 150);
