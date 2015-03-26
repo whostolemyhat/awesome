@@ -2,7 +2,7 @@
 
 HTML5 game
 
-
+![](screenshot.png)
 
 ##Dev Installation
 
